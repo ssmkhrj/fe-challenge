@@ -28,10 +28,10 @@
       document
         .getElementById("open-popup-btn")
         .addEventListener("click", () =>
-          window.open("http://127.0.0.1:3000/child.html")
+          window.open(
+            `${window.location.href.replace("index.html", "")}child.html`
+          )
         );
     </script>
-    <!-- this is where we link our script that adds the `getData` method on the window object and also opens the child window -->
-    <script src="./script.js"></script>
   </body>
 </html>
