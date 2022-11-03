@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Child</title>
+  </head>
+  <body>
+    <form>
+      <label for="user-id">User Id:</label>
+      <input id="user-id" placeholder="Enter User Id" />
+      <button type="submit">Get User Data</button>
+    </form>
+
+    <script>
+      const form = document.querySelector("form");
+
+      form.addEventListener("submit", async (e) => {
+        // to prevent the form from submitting
+        e.preventDefault();
+
+        // calling the `getData` method available on the parent window
+        let userProfileData = await window.opener.getData({
+          method: "getUserProfileData",
+          data: { id: e.target.elements["user-id"].value },
+        });
+
+        // appending the fetched user profile to the DOM
+        const preEl = document.createElement("pre");
+        preEl.textContent = JSON.stringify(userProfileData, null, 2);
+        document.body.appendChild(preEl);
+      });
+    </script>
+  </body>
+</html>
