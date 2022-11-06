@@ -15,16 +15,26 @@
 
     <script>
       const form = document.querySelector("form");
+      let getData;
+
+      window.addEventListener("message", (event) => {
+        if (event.origin === "https://ssmkhrj.github.io/fe-challenge/") {
+          getData = event.data;
+        }
+      });
 
       form.addEventListener("submit", async (e) => {
         // to prevent the form from submitting
         e.preventDefault();
 
-        // calling the `getData` method available on the parent window
-        let userProfileData = await window.opener.getData({
+        if (!getData) {
+          return;
+        }
+
+        let userProfileData = await eval(`(${getData})({
           method: "getUserProfileData",
           data: { id: e.target.elements["user-id"].value },
-        });
+        })`);
 
         // appending the fetched user profile to the DOM
         const preEl = document.createElement("pre");

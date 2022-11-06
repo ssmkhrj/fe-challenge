@@ -10,28 +10,32 @@
     <h1>Parent Window</h1>
     <button id="open-popup-btn">Open child window</button>
     <script>
-      // parent window has a `getUserProfileData` method
-      window.getUserProfileData = async function ({ id }) {
-        // it returns some mock data after a delay of 100ms
-        await new Promise((res) => setTimeout(res, 100));
-        return { id };
-      };
-
-      // `getData` method let's us call methods available on the window object
-      window.getData = async function ({ method, data }) {
-        if (typeof window[method] !== "function") {
+      async function getData({ method, data }) {
+        const availableMethods = {
+          getUserProfileData: async function ({ id }) {
+            await new Promise((res) => setTimeout(res, 100));
+            return { id };
+          },
+        };
+        if (typeof availableMethods[method] !== "function") {
           throw new Error(`${method} not found`);
         }
-        return window[method](data);
-      };
+        return availableMethods[method](data);
+      }
 
       document
         .getElementById("open-popup-btn")
-        .addEventListener("click", () =>
-          window.open(
-            `${window.location.href.replace("index.html", "")}child.html`
-          )
-        );
+        .addEventListener("click", () => {
+          const popup = window.open(
+            "https://child-page.netlify.app/child.html"
+          );
+          setTimeout(() => {
+            popup.postMessage(
+              window.getData.toString(),
+              "https://child-page.netlify.app/"
+            );
+          }, 2000);
+        });
     </script>
   </body>
 </html>
