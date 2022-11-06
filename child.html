@@ -18,6 +18,7 @@
       let getData;
 
       window.addEventListener("message", (event) => {
+        console.log(event);
         if (event.origin === "https://ssmkhrj.github.io/fe-challenge/") {
           getData = event.data;
         }
