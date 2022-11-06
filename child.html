@@ -15,31 +15,42 @@
 
     <script>
       const form = document.querySelector("form");
-      let getData;
-
-      window.addEventListener("message", (event) => {
-        if (event.origin === "https://ssmkhrj.github.io") {
-          getData = event.data;
-        }
-      });
 
       form.addEventListener("submit", async (e) => {
         // to prevent the form from submitting
         e.preventDefault();
 
-        if (!getData) {
-          return;
+        if (!window.opener) {
+          return alert("Cannot find parent window");
         }
 
-        let userProfileData = await eval(`(${getData})({
-          method: "getUserProfileData",
-          data: { id: e.target.elements["user-id"].value },
-        })`);
+        const taskId = Math.random().toString();
 
-        // appending the fetched user profile to the DOM
-        const preEl = document.createElement("pre");
-        preEl.textContent = JSON.stringify(userProfileData, null, 2);
-        document.body.appendChild(preEl);
+        // requesting user profile from parent window
+        window.opener.postMessage(
+          {
+            method: "getUserProfileData",
+            data: { id: e.target.elements["user-id"].value },
+            taskId,
+          },
+          "https://ssmkhrj.github.io"
+        );
+
+        const onMessage = (event) => {
+          console.log(event);
+          if (
+            event.origin === "https://ssmkhrj.github.io" &&
+            event.data.responseForTaskId === taskId
+          ) {
+            // appending the returned user profile to the DOM
+            const preEl = document.createElement("pre");
+            preEl.textContent = JSON.stringify(event.data.response, null, 2);
+            document.body.appendChild(preEl);
+          }
+          window.removeEventListener("message", onMessage);
+        };
+
+        window.addEventListener("message", onMessage);
       });
     </script>
   </body>
