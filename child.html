@@ -37,7 +37,7 @@
         );
 
         const onMessage = (event) => {
-          console.log(event);
+          console.log("Child:", event);
           if (
             event.origin === "https://ssmkhrj.github.io" &&
             event.data.responseForTaskId === taskId

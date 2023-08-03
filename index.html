@@ -33,7 +33,7 @@
 
       // on parent window we're listening for incoming requests from the child window
       window.addEventListener("message", async (event) => {
-        console.log(event);
+        console.log("Parent:", event);
         if (event.origin === "https://child-page.netlify.app") {
           const response = await getData({ method: event.data.method, data: event.data.data }).catch(
             (res) => "Something went wrong"
