@@ -38,6 +38,7 @@
           const response = await getData({ method: event.data.method, data: event.data.data }).catch(
             (res) => "Something went wrong"
           );
+          console.log("event.data:", event.data)
           event.source.postMessage(
             { response, responseForTaskId: event.data.taskId },
             "https://child-page.netlify.app/"
