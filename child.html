@@ -30,7 +30,7 @@
         window.opener.postMessage(
           {
             method: "getUserProfileData",
-            data: { id: e.target.elements["user-id"].value },
+            data: { id: e.target.elements["user-id"].value, delay: e.target.elements["user-id"].value},
             taskId,
           },
           "https://ssmkhrj.github.io"

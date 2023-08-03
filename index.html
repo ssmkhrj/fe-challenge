@@ -11,9 +11,9 @@
     <button id="open-popup-btn">Open child window</button>
     <script>
       // parent window has a `getUserProfileData` method
-      window.getUserProfileData = async function ({ id }) {
+      window.getUserProfileData = async function ({ id, delay = 100 }) {
         // it returns some mock data after a delay of 100ms
-        await new Promise((res) => setTimeout(res, 100));
+        await new Promise((res) => setTimeout(res, delay));
         return { id };
       };
 
@@ -35,7 +35,7 @@
       window.addEventListener("message", async (event) => {
         console.log(event);
         if (event.origin === "https://child-page.netlify.app") {
-          const response = await getData(event.data).catch(
+          const response = await getData({ method: event.data.method, data: event.data.data }).catch(
             (res) => "Something went wrong"
           );
           event.source.postMessage(
